@@ -1,0 +1,641 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Storm-Proof Records</title>
+<meta name="description" content="Case study: replacing storm-damaged paper handover logs with a searchable, zero-cost web app on Google Workspace, and migrating historical records back to 2018. Portfolio project by José Cabral Ferraro.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    color-scheme: light;
+    --page: #f9f9f7;
+    --surface: #fcfcfb;
+    --ink: #0b0b0b;
+    --ink-2: #52514e;
+    --muted: #898781;
+    --grid: #e1e0d9;
+    --border: rgba(11, 11, 11, 0.10);
+    --accent: #2a78d6;
+    --accent-wash: rgba(42, 120, 214, 0.08);
+    --before: #d03b3b;
+    --after: #006300;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      color-scheme: dark;
+      --page: #0d0d0d;
+      --surface: #1a1a19;
+      --ink: #ffffff;
+      --ink-2: #c3c2b7;
+      --muted: #898781;
+      --grid: #2c2c2a;
+      --border: rgba(255, 255, 255, 0.10);
+      --accent: #3987e5;
+      --accent-wash: rgba(57, 135, 229, 0.12);
+      --before: #e66767;
+      --after: #0ca30c;
+    }
+  }
+  :root[data-theme="dark"] {
+    color-scheme: dark;
+    --page: #0d0d0d;
+    --surface: #1a1a19;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --grid: #2c2c2a;
+    --border: rgba(255, 255, 255, 0.10);
+    --accent: #3987e5;
+    --accent-wash: rgba(57, 135, 229, 0.12);
+    --before: #e66767;
+    --after: #0ca30c;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--page);
+    color: var(--ink);
+    font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+  }
+  .wrap { max-width: 960px; margin: 0 auto; padding: 40px 16px 56px; }
+  a { color: var(--accent); }
+
+  header { margin-bottom: 28px; }
+  .eyebrow { font-size: 13px; color: var(--ink-2); margin: 0 0 8px; }
+  .tag { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; border: 1px solid var(--border); color: var(--ink-2); background: var(--surface); margin-left: 6px; }
+  h1 { font-size: clamp(26px, 4.5vw, 36px); line-height: 1.15; margin: 0 0 12px; font-weight: 650; max-width: 760px; }
+  .lede { margin: 0 0 12px; color: var(--ink-2); font-size: 17px; max-width: 720px; }
+  .byline { font-size: 14px; color: var(--ink-2); margin: 0; }
+
+  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 20px 22px; }
+  section { margin: 36px 0 0; }
+  h2 { font-size: 21px; margin: 0 0 6px; font-weight: 620; }
+  .sub { color: var(--ink-2); margin: 0 0 16px; max-width: 720px; }
+
+  /* KPI row */
+  .kpis { display: grid; grid-template-columns: 1.4fr repeat(4, 1fr); gap: 12px; }
+  .kpi-label { font-size: 13px; color: var(--ink-2); margin: 0 0 4px; }
+  .kpi-value { font-size: 30px; font-weight: 620; line-height: 1.1; margin: 0; font-variant-numeric: tabular-nums; }
+  .kpi-note { font-size: 13px; color: var(--muted); margin: 6px 0 0; }
+  .hero .kpi-value { font-size: 54px; }
+
+  /* Problem / constraints */
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .two h3 { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-2); margin: 0 0 8px; font-weight: 600; }
+  ul.clean { margin: 0; padding-left: 20px; }
+  ul.clean li { margin-bottom: 6px; }
+
+  /* Flow */
+  .flow { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px 32px; counter-reset: step; }
+  .flow li { position: relative; counter-increment: step; }
+  .flow li .card { height: 100%; padding: 16px 18px; }
+  .flow li .card::before {
+    content: counter(step);
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--accent-wash); color: var(--accent);
+    font-size: 13px; font-weight: 650; margin-bottom: 8px;
+  }
+  .flow strong { display: block; margin-bottom: 4px; }
+  .flow p { margin: 0; font-size: 14px; color: var(--ink-2); }
+  .flow li:not(:last-child)::after {
+    content: "→"; position: absolute; right: -24px; top: 50%; transform: translateY(-50%);
+    color: var(--muted); font-size: 18px;
+  }
+  .flow li:nth-child(3)::after { content: none; }
+  .flow-note { font-size: 14px; color: var(--ink-2); margin: 14px 0 0; }
+  code { font: 13px/1.4 ui-monospace, "Cascadia Mono", Consolas, monospace; background: var(--accent-wash); padding: 1px 5px; border-radius: 4px; }
+
+  /* Tables */
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  th, td { text-align: left; padding: 10px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+  th { color: var(--ink-2); font-weight: 600; font-size: 13px; }
+  td:first-child { font-weight: 600; width: 26%; }
+  .before { color: var(--before); }
+  .after { color: var(--after); }
+  .table-wrap { overflow-x: auto; }
+
+  /* Migration steps */
+  .steps { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 16px; }
+  .steps .card { padding: 16px; }
+  .steps strong { display: block; margin-bottom: 4px; }
+  .steps p { margin: 0; font-size: 14px; color: var(--ink-2); }
+
+  .skills { display: flex; flex-wrap: wrap; gap: 8px; margin: 0; padding: 0; list-style: none; }
+  .skills li { font-size: 14px; padding: 4px 12px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface); }
+
+  details { margin-top: 12px; }
+  summary { cursor: pointer; color: var(--accent); font-size: 15px; }
+  details ul { margin: 10px 0 0; padding-left: 20px; color: var(--ink-2); font-size: 15px; }
+  details li { margin-bottom: 4px; }
+
+  .label-caps { font-size: 13px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-2); margin: 0 0 8px; font-weight: 600; }
+  .demo-tag { display: inline-block; font-size: 12px; padding: 2px 8px; border-radius: 999px; background: var(--accent-wash); color: var(--accent); font-weight: 600; }
+
+  /* Demo */
+  .demo-bar { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+  .search { position: relative; flex: 1 1 260px; max-width: 420px; }
+  .search input {
+    width: 100%; font: inherit; color: var(--ink); background: var(--page);
+    border: 1px solid var(--border); border-radius: 8px; padding: 9px 12px;
+  }
+  .search input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .hint { font-size: 13px; color: var(--muted); margin: 0; }
+  .demo table { font-size: 14px; }
+  .demo td:first-child { width: auto; font-weight: 400; color: var(--ink-2); white-space: nowrap; }
+  .demo td.name { font-weight: 600; }
+  .demo .void td { color: var(--muted); }
+  .demo .void td.name { text-decoration: line-through; }
+  .status { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; background: var(--muted); }
+  .st-done .dot { background: var(--after); }
+  .st-pending .dot { background: var(--before); }
+  .btn {
+    font: inherit; font-size: 13px; color: var(--accent); background: none;
+    border: 1px solid var(--border); border-radius: 6px; padding: 3px 9px; cursor: pointer; white-space: nowrap;
+  }
+  .btn:hover { background: var(--accent-wash); }
+  .btn.primary { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .muted { color: var(--muted); }
+  .panel { margin-top: 14px; display: none; }
+  .panel.open { display: block; }
+  .panel-inner { display: flex; flex-wrap: wrap; gap: 16px 24px; align-items: flex-start; }
+  .slip { width: 320px; max-width: 100%; height: auto; display: block; border-radius: 4px; box-shadow: 0 1px 3px rgba(0,0,0,.18); }
+  .panel-text { flex: 1 1 220px; font-size: 14px; }
+  .panel-text p { margin: 0 0 6px; }
+  .file { font: 13px/1.4 ui-monospace, "Cascadia Mono", Consolas, monospace; word-break: break-all; }
+  .stepper { list-style: none; margin: 0; padding: 0; font-size: 14px; }
+  .stepper li { padding: 6px 0 6px 28px; position: relative; color: var(--muted); }
+  .stepper li::before { content: ""; position: absolute; left: 4px; top: 11px; width: 12px; height: 12px; border-radius: 50%; border: 2px solid var(--grid); }
+  .stepper li.done { color: var(--ink); }
+  .stepper li.done::before { background: var(--after); border-color: var(--after); }
+
+  /* Before / after paper */
+  .ba { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr); gap: 20px; align-items: start; }
+  .paper-wrap { overflow-x: auto; }
+  .paper {
+    background: #fbf8ef; color: #222; border-radius: 4px; padding: 14px 10px 18px 28px; position: relative;
+    box-shadow: 0 1px 3px rgba(0,0,0,.2); width: max-content; min-width: 100%;
+    background-image: radial-gradient(ellipse at 85% 90%, rgba(150,120,60,.18), transparent 55%);
+  }
+  .paper-title { font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; margin: 0 0 8px; color: #333; }
+  .paper table { font-size: 12px; } .paper td { white-space: nowrap; }
+  .paper th, .paper td { border: 1px solid #9a968a; padding: 0 6px; height: 40px; vertical-align: middle; color: #222; }
+  .paper th { height: 26px; font-size: 11px; color: #444; background: rgba(0,0,0,.04); }
+  .paper td:first-child { width: 28px; font-weight: 400; text-align: center; }
+  .hand { font-family: "Caveat", "Segoe Script", cursive; font-size: 19px; color: #1d3270; line-height: 1; }
+  .paper td.sigcell { width: 90px; position: relative; padding: 0; }
+  .paper td.sigcell svg { position: absolute; left: 4px; top: 4px; overflow: visible; }
+  .strike { text-decoration: line-through; text-decoration-color: #1d3270; }
+  .circled { border: 1.5px solid #c0392b; border-radius: 50%; padding: 0 3px; }
+  .callout {
+    position: absolute; left: 6px; width: 18px; height: 18px; border-radius: 50%;
+    background: #c0392b; color: #fff; font-size: 11px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .margin-mark { position: absolute; right: 0; font-family: "Caveat", cursive; font-size: 20px; color: #555; }
+  .clean td:first-child { width: auto; }
+  .clean td { font-size: 14px; }
+  .clean .num-badge {
+    display: inline-flex; width: 18px; height: 18px; border-radius: 50%; background: #c0392b; color: #fff;
+    font-size: 11px; font-weight: 700; align-items: center; justify-content: center; margin-right: 6px; vertical-align: 1px;
+  }
+  .rule { font-size: 13px; color: var(--ink-2); }
+
+  footer { margin-top: 44px; padding-top: 16px; border-top: 1px solid var(--grid); font-size: 14px; color: var(--ink-2); }
+  footer p { margin: 0 0 6px; }
+
+  @media (max-width: 820px) {
+    .kpis { grid-template-columns: 1fr 1fr; }
+    .kpis .hero { grid-column: 1 / -1; }
+    .two { grid-template-columns: 1fr; }
+    .flow { grid-template-columns: 1fr; gap: 26px; }
+    .flow li::after, .flow li:nth-child(3)::after {
+      content: "↓"; right: auto; left: 50%; top: auto; bottom: -24px; transform: translateX(-50%);
+    }
+    .flow li:last-child::after { content: none; }
+    .steps { grid-template-columns: 1fr 1fr; }
+    .ba { grid-template-columns: 1fr; }
+    .demo .col-id, .demo .col-date { display: none; }
+  }
+  @media (max-width: 560px) {
+    .paper th:nth-child(3), .paper td:nth-child(3) { display: none; }
+    .paper .hand { font-size: 16px; }
+    .paper th, .paper td { padding: 0 4px; }
+  }
+  @media (max-width: 480px) {
+    .steps { grid-template-columns: 1fr; }
+    .hero .kpi-value { font-size: 44px; }
+  }
+
+  @media print {
+    :root { color-scheme: light; }
+    body { background: #fff; font-size: 12.5px; }
+    .wrap { max-width: none; padding: 0; }
+    section { margin-top: 18px; break-inside: avoid; }
+    .card { border-color: #ccc; }
+    details, .demo-bar .hint, .panel, .btn { display: none !important; }
+    .paper { box-shadow: none; border: 1px solid #ccc; }
+    a { color: inherit; text-decoration: none; }
+  }
+</style>
+</head>
+<body>
+<main class="wrap">
+
+  <header>
+    <p class="eyebrow">Case study · Process &amp; Systems <span class="tag">Real project · client data protected</span></p>
+    <h1>From storm-damaged paper to records found in seconds</h1>
+    <p class="lede">A training and consulting firm with 5,100+ alumni and 190+ courses over 11 years kept proof of every certificate handover on paper. Then the strongest hailstorm in years broke parts of the office roof, and rainwater soaked the sheets kept closest at hand. I built a zero-cost web app that keeps the team’s paper routine but stores every signature in the cloud, and I’m moving the archive into it: 2024–2026 is done (~1,550 records), and every year back to 2018 is in progress.</p>
+    <p class="byline">José Cabral Ferraro · Process &amp; Systems Specialist · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a></p>
+  </header>
+
+  <div class="kpis">
+    <div class="card hero">
+      <p class="kpi-label">Handwritten records digitized and searchable</p>
+      <p class="kpi-value">~1,550</p>
+      <p class="kpi-note">3 years (2024–2026), 37 courses. 2018–2023 in progress.</p>
+    </div>
+    <div class="card">
+      <p class="kpi-label">Certificate handovers</p>
+      <p class="kpi-value">~1,100</p>
+      <p class="kpi-note">linked to their signed proof or courier tracking number</p>
+    </div>
+    <div class="card">
+      <p class="kpi-label">Time to find a record</p>
+      <p class="kpi-value">Seconds</p>
+      <p class="kpi-note">was ~3 min, or 6+ min if the sheet was archived</p>
+    </div>
+    <div class="card">
+      <p class="kpi-label">Ambiguous cases resolved</p>
+      <p class="kpi-value">~80</p>
+      <p class="kpi-note">checked with the business owner, paper in hand</p>
+    </div>
+    <div class="card">
+      <p class="kpi-label">Records lost</p>
+      <p class="kpi-value">0</p>
+      <p class="kpi-note">~100 pages scanned · $0 in extra software</p>
+    </div>
+  </div>
+
+  <section>
+    <h2>The problem</h2>
+    <p class="sub">The paper was the only proof that someone had received their certificate, and that proof was at risk.</p>
+    <div class="two">
+      <div class="card">
+        <h3>What was going wrong</h3>
+        <ul class="clean">
+          <li>During an El Niño season, the strongest hailstorm in years (hail the size of tennis balls) broke parts of the office roof. Water leaked in and soaked and stained the sheets kept closest at hand, so the proof of delivery was at risk.</li>
+          <li>To check if someone had picked up a certificate, staff flipped through sheets by hand: about 3 minutes for the current year, twice as long or more if the sheet was already archived.</li>
+          <li>Records were messy: signatures spanning two rows, wrong years, notes in the margins, small signed slips taped to the back.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What the owners asked for</h3>
+        <ul class="clean">
+          <li><strong>Don’t change how we work.</strong> People keep signing on paper, no on-screen signatures yet.</li>
+          <li><strong>Make it a standalone system</strong>, independent from all the company’s existing software, not just the payments system. The goal was to go from paper sheets stored in a cabinet to fully digital records.</li>
+          <li><strong>No new software costs.</strong></li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How it works now</h2>
+    <p class="sub">Signing still happens on paper. The only new step is taking a photo with a phone.</p>
+    <ol class="flow">
+      <li><div class="card"><strong>Sign a paper slip</strong><p>A redesigned slip with boxes for the course code and person number, so every photo identifies itself.</p></div></li>
+      <li><div class="card"><strong>Take a photo</strong><p>With any phone, from the web app. Works on phone and PC, no Google account needed.</p></div></li>
+      <li><div class="card"><strong>Photo is shrunk</strong><p>Compressed in the browser from 3–5 MB to about 250 KB (over 90% smaller).</p></div></li>
+      <li><div class="card"><strong>Saved and named automatically</strong><p>Stored in a Drive folder by year and course, named <code>code - no. - name - date</code>.</p></div></li>
+      <li><div class="card"><strong>Register updated</strong><p>The spreadsheet (one tab per course, same layout as the paper sheet) gets a “View signature” link.</p></div></li>
+      <li><div class="card"><strong>Search in seconds</strong><p>Type a name or ID number and see every course and year, with the signature photo.</p></div></li>
+    </ol>
+    <p class="flow-note">It also covers the other ways a certificate leaves the office: picked up by someone else, sent by courier (with tracking number), or signed on an old sheet. Records are never deleted. A wrong entry is marked “void” and its photo is kept.</p>
+  </section>
+
+  <section>
+    <h2>Try a simplified version</h2>
+    <p class="sub">A small copy of the search screen, with made-up people. Search a name or ID, open a signature, or register a pending handover.</p>
+    <div class="card demo">
+      <div class="demo-bar">
+        <label class="search">
+          <input id="q" type="search" placeholder="Search by name or ID number, e.g. “Ana” or 4218" aria-label="Search by name or ID number" autocomplete="off">
+        </label>
+        <span style="display:inline-flex;gap:10px;align-items:center;flex-wrap:wrap">
+          <button class="btn" id="reset" type="button">↺ Reset demo</button>
+          <span class="demo-tag">Illustrative demo · fictional data</span>
+        </span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Course</th><th>No.</th><th>Name</th><th class="col-id">ID</th><th>Status</th><th class="col-date">Date</th><th></th></tr></thead>
+          <tbody id="rows"></tbody>
+        </table>
+      </div>
+      <p class="hint" id="count" style="margin-top:10px"></p>
+      <div class="panel" id="panel" aria-live="polite"></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Moving the paper archive into the system</h2>
+    <p class="sub">The largest part of the project. 2024–2026 is done: ~100 scanned pages, 37 courses and ~1,550 records, with signed slips taped to the back of many sheets. Now I’m applying the same process to every year back to 2018.</p>
+    <div class="steps">
+      <div class="card"><strong>1. Scan</strong><p>Front (the list) and back (taped slips) of every sheet, year by year.</p></div>
+      <div class="card"><strong>2. Transcribe</strong><p>Names, ID numbers, dates and how each certificate was handed over.</p></div>
+      <div class="card"><strong>3. Validate</strong><p>Automatic checks on numbering, ID format and dates, plus a list of doubtful cases.</p></div>
+      <div class="card"><strong>4. Import</strong><p>One import created each course with its records, linked to the right page photo.</p></div>
+    </div>
+    <div class="card">
+      <div class="demo-bar" style="margin-bottom:6px">
+        <p class="label-caps" style="margin:0">From a messy sheet to clean records</p>
+        <span class="demo-tag">Recreated example · fictional names</span>
+      </div>
+      <p style="margin:0 0 14px;color:var(--ink-2);font-size:15px">Real sheets looked like this. Rules agreed with the team were applied the same way everywhere, and about 80 doubtful cases were checked one by one with the business owner.</p>
+      <div class="ba">
+        <div class="paper-wrap">
+          <div class="paper" id="paper">
+            <p class="paper-title">Certificate handover · Course 25-07</p>
+            <table>
+              <thead><tr><th>No.</th><th>Full name</th><th>ID</th><th>Date</th><th>Signature</th></tr></thead>
+              <tbody>
+                <tr><td>1</td><td>L. Benítez</td><td>3.456.781</td><td><span class="hand circled">12/03/24</span></td><td class="sigcell" data-sig="Lucía Benítez"></td></tr>
+                <tr><td>2</td><td>M. Ríos</td><td>4.902.335</td><td><span class="hand">12/03/25</span></td><td class="sigcell" data-sig="Martín Ríos" data-tall="1"></td></tr>
+                <tr><td>3</td><td>D. Acosta</td><td>5.118.064</td><td><span class="hand">12/03/25</span></td><td class="sigcell"></td></tr>
+                <tr><td>4</td><td>C. Giménez</td><td>4.377.590</td><td><span class="hand strike">05/03</span><br><span class="hand">19/03/25</span></td><td class="sigcell" data-sig="Carla Giménez"></td></tr>
+                <tr><td>5</td><td>P. Ortiz</td><td>3.809.152</td><td></td><td class="sigcell" data-sig="Pablo Ortiz"></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="clean">
+            <thead><tr><th>Person</th><th>In the system</th><th>Why</th></tr></thead>
+            <tbody>
+              <tr><td><span class="num-badge">1</span>Lucía Benítez</td><td>Picked up · 12/03/2025</td><td class="rule">Wrong year: the course ran in 2025. Checked against the paper.</td></tr>
+              <tr><td><span class="num-badge">2</span>Martín Ríos</td><td>Picked up · 12/03/2025</td><td class="rule">Signature spills into row 3, but belongs to row 2.</td></tr>
+              <tr><td><span class="num-badge">3</span>Diego Acosta</td><td><span class="before">Not picked up</span></td><td class="rule">Date but no signature = not picked up.</td></tr>
+              <tr><td><span class="num-badge">4</span>Carla Giménez</td><td>Picked up · 19/03/2025</td><td class="rule">Two dates = the most recent one.</td></tr>
+              <tr><td><span class="num-badge">5</span>Pablo Ortiz</td><td>Picked up · 12/03/2025</td><td class="rule">Signature but no date = the course’s most common date.</td></tr>
+            </tbody>
+          </table>
+          <p class="hint" style="margin-top:8px">Ticks and dashes in the margins were ignored.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Before and after</h2>
+    <div class="card table-wrap">
+      <table>
+        <thead><tr><th></th><th>Before</th><th>After</th></tr></thead>
+        <tbody>
+          <tr><td>Did this person get their certificate?</td><td class="before">~3 min flipping sheets (6+ min if archived)</td><td class="after">Type a name or ID, answer in seconds</td></tr>
+          <tr><td>Proof of delivery</td><td class="before">One paper copy, already damaged</td><td class="after">Photo backed up in the cloud</td></tr>
+          <tr><td>Team routine</td><td>Sign on paper</td><td class="after">Sign on paper + one photo (easy to adopt)</td></tr>
+          <tr><td>Older years</td><td class="before">Only in boxes</td><td class="after">Being loaded back to 2018 with the same process</td></tr>
+          <tr><td>Cost</td><td>—</td><td class="after">$0 in software</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section>
+    <h2>What I did</h2>
+    <p class="sub">End to end: from talking with the team to handing over a working tool and a short guide.</p>
+    <ul class="skills">
+      <li>Process mapping with users</li>
+      <li>Solution design within business constraints</li>
+      <li>Data migration &amp; cleaning</li>
+      <li>Validation &amp; quality control</li>
+      <li>Google Apps Script / JavaScript</li>
+      <li>Google Sheets &amp; Drive</li>
+      <li>User guide &amp; team training</li>
+      <li>Personal-data privacy</li>
+    </ul>
+    <details>
+      <summary>Technical details</summary>
+      <ul>
+        <li>Backend in Google Apps Script (JavaScript V8), with a lock so two people can’t save at the same time.</li>
+        <li>Frontend in plain HTML/CSS/JavaScript, no libraries, with the company’s colors.</li>
+        <li>One spreadsheet per year, one tab per course. The course code (e.g. <code>26-05</code>) sets the year, tab and photo folder.</li>
+        <li>Password access with lockout after failed attempts and 6-hour sessions.</li>
+        <li>Built and tested first as a prototype with fictional data, then moved to the company account. Developed locally with clasp and git.</li>
+        <li>The app belongs 100% to the company and keeps working without me.</li>
+        <li>After the migration, all temporary files with personal data were deleted.</li>
+      </ul>
+    </details>
+  </section>
+
+  <footer>
+    <p>This is a real project at my current job. Our clients trust us with their personal information, and protecting it is part of the job, so no names, ID numbers or screenshots of the real system are shown here. The demo data and the recreated sheet are fictional and were generated with AI. Numbers are rounded.</p>
+    <p>Another project for the same team: <a href="https://josecabfe.github.io/payments-invoicing-case-study/">Recording a course payment went from 5 minutes to under 1 →</a></p>
+    <p>José Cabral Ferraro · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a></p>
+  </footer>
+
+</main>
+<script>
+(function () {
+  // ---------- Fake signatures (deterministic squiggle per name) ----------
+  function rng(seed) {
+    var h = 2166136261;
+    for (var i = 0; i < seed.length; i++) { h ^= seed.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return function () { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 10000) / 10000; };
+  }
+  // Catmull-Rom spline through points -> smooth cubic Bézier path
+  function smooth(pts) {
+    var d = "M" + pts[0][0].toFixed(1) + " " + pts[0][1].toFixed(1);
+    for (var i = 0; i < pts.length - 1; i++) {
+      var p0 = pts[i - 1] || pts[i], p1 = pts[i], p2 = pts[i + 1], p3 = pts[i + 2] || p2;
+      d += " C" + (p1[0] + (p2[0] - p0[0]) / 6).toFixed(1) + " " + (p1[1] + (p2[1] - p0[1]) / 6).toFixed(1) + "," +
+        (p2[0] - (p3[0] - p1[0]) / 6).toFixed(1) + " " + (p2[1] - (p3[1] - p1[1]) / 6).toFixed(1) + "," +
+        p2[0].toFixed(1) + " " + p2[1].toFixed(1);
+    }
+    return d;
+  }
+  function sigPath(name, w, h) {
+    var r = rng(name), base = h * 0.62, x = 6;
+    // Capital: tall upstroke with a loop
+    var pts = [[x, base], [x + 6, h * 0.08], [x + 3, h * 0.04], [x + 1, h * 0.3], [x + 10, base + h * 0.05], [x + 16, base - h * 0.2]];
+    x += 16;
+    var end = w * (0.78 + r() * 0.12);
+    while (x < end) {
+      var kind = r(), s = 5 + r() * 6;
+      if (kind < 0.25) {            // tall loop (l, b, h)
+        pts.push([x + s * 0.6, h * (0.08 + r() * 0.15)], [x + s * 0.1, h * 0.2], [x + s * 0.5, base]);
+      } else if (kind < 0.4) {      // descender loop (g, y)
+        pts.push([x + s * 0.5, base], [x + s * 0.7, h * 0.95], [x + s * 0.1, h * 0.85], [x + s, base - h * 0.08]);
+      } else {                      // small hump (n, m, u)
+        pts.push([x + s * 0.5, base - h * (0.15 + r() * 0.15)], [x + s, base]);
+      }
+      x += s;
+    }
+    pts.push([x + 8, base - h * 0.25]);
+    var d = smooth(pts);
+    // Underline flourish
+    var y = base + h * (0.12 + r() * 0.1);
+    d += " M" + (4 + r() * 8).toFixed(1) + " " + (y + 3).toFixed(1) + " Q" + (w * 0.45).toFixed(1) + " " + (y - 5).toFixed(1) + "," + (x + 12).toFixed(1) + " " + (y - 2).toFixed(1);
+    return d;
+  }
+  function sigSvg(name, w, h) {
+    return '<svg width="' + w + '" height="' + h + '" viewBox="0 0 ' + w + " " + h + '" aria-hidden="true"><path d="' + sigPath(name, w, h) +
+      '" fill="none" stroke="#1d3270" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  }
+
+  // ---------- Before/after paper: draw signatures and callouts ----------
+  var paper = document.getElementById("paper");
+  paper.querySelectorAll("td.sigcell[data-sig]").forEach(function (td) {
+    var tall = td.dataset.tall;
+    td.innerHTML = sigSvg(td.dataset.sig, 80, tall ? 66 : 32);
+  });
+  function placeCallouts() {
+    paper.querySelectorAll(".callout, .margin-mark").forEach(function (n) { n.remove(); });
+    var top = paper.getBoundingClientRect().top;
+    paper.querySelectorAll("tbody tr").forEach(function (tr, i) {
+      var r = tr.getBoundingClientRect(), c = document.createElement("span");
+      c.className = "callout"; c.textContent = i + 1;
+      c.style.top = (r.top - top + r.height / 2 - 9) + "px";
+      paper.appendChild(c);
+      if (i === 0 || i === 3) {
+        var m = document.createElement("span");
+        m.className = "margin-mark"; m.textContent = i === 0 ? "✓" : "–";
+        m.style.top = (r.top - top + r.height / 2 - 14) + "px";
+        paper.appendChild(m);
+      }
+    });
+  }
+  placeCallouts();
+  window.addEventListener("resize", placeCallouts);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(placeCallouts);
+
+  // ---------- Demo data (fictional) ----------
+  var people = [
+    { g: "26-03", n: 1, first: "Ana", last: "Torres", id: "4.218.390", st: "slip", date: "2026-04-14", by: "Front desk" },
+    { g: "26-03", n: 2, first: "Bruno", last: "Medina", id: "5.067.112", st: "courier", date: "2026-04-16", track: "70-4418" },
+    { g: "26-03", n: 3, first: "Camila", last: "Rojas", id: "3.991.457", st: "pending" },
+    { g: "26-03", n: 4, first: "Daniel", last: "Vera", id: "4.730.268", st: "slip", date: "2026-04-14", by: "Front desk" },
+    { g: "26-03", n: 5, first: "Elena", last: "Duarte", id: "5.302.845", st: "slip", date: "2026-04-21", by: "A colleague, on her behalf" },
+    { g: "26-03", n: 6, first: "Federico", last: "Sosa", id: "4.115.903", st: "pending" },
+    { g: "25-11", n: 1, first: "Gabriela", last: "Núñez", id: "3.874.226", st: "sheet", date: "2025-11-28", page: 1 },
+    { g: "25-11", n: 2, first: "Hugo", last: "Ferreira", id: "4.659.071", st: "sheet", date: "2025-11-28", page: 1 },
+    { g: "25-11", n: 3, first: "Ana Lucía", last: "Benítez", id: "5.240.618", st: "pending" },
+    { g: "25-11", n: 4, first: "Iván", last: "Cáceres", id: "4.583.907", st: "void", date: "2025-11-28" }
+  ];
+  var initial = JSON.stringify(people), timer;
+  var LABEL = { slip: "Picked up · slip signed", courier: "Sent by courier", sheet: "Signed on original sheet", pending: "Not picked up yet", void: "Void (entered by mistake)" };
+
+  var rowsEl = document.getElementById("rows"), panel = document.getElementById("panel"),
+      q = document.getElementById("q"), countEl = document.getElementById("count");
+
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
+  function fmt(d) { if (!d) return "—"; var p = d.split("-"); return p[2] + "/" + p[1] + "/" + p[0]; }
+  function norm(s) { return s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase(); }
+  function fileName(p) { return p.g + " - " + String(p.n).padStart(2, "0") + " - " + p.last + ", " + p.first + " - " + p.date + ".jpg"; }
+
+  function render() {
+    var raw = q.value.trim(), term = norm(raw), digits = raw.replace(/\D/g, "");
+    var isId = digits.length > 0 && /^[\d.\s-]+$/.test(raw);   // "4218", "4.218.390", "42"
+    var list = people.filter(function (p) {
+      if (!term) return true;
+      if (isId) return p.id.replace(/\D/g, "").indexOf(digits) > -1;
+      var hay = norm(p.first + " " + p.last + " " + p.last + " " + p.first);
+      return hay.indexOf(term) > -1;
+    });
+    rowsEl.innerHTML = list.map(function (p) {
+      var i = people.indexOf(p), cls = p.st === "pending" ? "st-pending" : p.st === "void" ? "" : "st-done", action;
+      if (p.st === "pending") action = '<button class="btn primary" data-reg="' + i + '">Register</button>';
+      else if (p.st === "courier") action = '<button class="btn" data-view="' + i + '">Details</button>';
+      else action = '<button class="btn" data-view="' + i + '">View signature</button>';
+      return '<tr class="' + (p.st === "void" ? "void" : "") + '"><td>' + p.g + "</td><td>" + p.n + '</td><td class="name">' + esc(p.first + " " + p.last) +
+        '</td><td class="col-id">' + p.id + '</td><td><span class="status ' + cls + '"><span class="dot"></span>' + LABEL[p.st] +
+        '</span></td><td class="col-date">' + fmt(p.date) + "</td><td>" + action + "</td></tr>";
+    }).join("") || '<tr><td colspan="7" class="muted" style="text-align:center;padding:24px">No one found. Try “Ana”, “Rojas” or 4730.</td></tr>';
+    var groups = {}; list.forEach(function (p) { groups[p.g] = 1; });
+    countEl.textContent = list.length + (list.length === 1 ? " person" : " people") + " found across " + Object.keys(groups).length + " course" + (Object.keys(groups).length === 1 ? "" : "s") + " · real system: ~1,550 records from 2024–2026, and growing";
+  }
+
+  function slipSvg(p) {
+    var name = p.first + " " + p.last;
+    return '<svg class="slip" viewBox="0 0 320 180" role="img" aria-label="Photo of a signed handover slip (fictional)">' +
+      '<rect width="320" height="180" fill="#fbf8ef"/>' +
+      '<text x="14" y="22" font-size="10" font-weight="700" fill="#333" font-family="system-ui,sans-serif" letter-spacing=".5">CERTIFICATE HANDOVER SLIP</text>' +
+      '<text x="190" y="22" font-size="9" fill="#555" font-family="system-ui,sans-serif">Course</text><rect x="226" y="10" width="40" height="17" fill="none" stroke="#777"/>' +
+      '<text x="230" y="23" font-size="15" fill="#1d3270" font-family="Caveat,cursive">' + p.g + '</text>' +
+      '<text x="270" y="22" font-size="9" fill="#555" font-family="system-ui,sans-serif">No.</text><rect x="287" y="10" width="24" height="17" fill="none" stroke="#777"/>' +
+      '<text x="291" y="23" font-size="15" fill="#1d3270" font-family="Caveat,cursive">' + String(p.n).padStart(2, "0") + '</text>' +
+      '<text x="14" y="56" font-size="9" fill="#555" font-family="system-ui,sans-serif">Name</text><line x1="48" y1="58" x2="306" y2="58" stroke="#999"/>' +
+      '<text x="54" y="54" font-size="19" fill="#1d3270" font-family="Caveat,cursive">' + esc(name) + '</text>' +
+      '<text x="14" y="84" font-size="9" fill="#555" font-family="system-ui,sans-serif">ID</text><line x1="48" y1="86" x2="170" y2="86" stroke="#999"/>' +
+      '<text x="54" y="82" font-size="18" fill="#1d3270" font-family="Caveat,cursive">' + p.id + '</text>' +
+      '<text x="180" y="84" font-size="9" fill="#555" font-family="system-ui,sans-serif">Date</text><line x1="206" y1="86" x2="306" y2="86" stroke="#999"/>' +
+      '<text x="212" y="82" font-size="18" fill="#1d3270" font-family="Caveat,cursive">' + fmt(p.date) + '</text>' +
+      '<text x="14" y="160" font-size="9" fill="#555" font-family="system-ui,sans-serif">Signature</text><line x1="64" y1="162" x2="306" y2="162" stroke="#999"/>' +
+      '<g transform="translate(80,104)">' + sigSvg(name, 180, 56).replace(/<\/?svg[^>]*>/g, "") + "</g></svg>";
+  }
+
+  function view(i) {
+    var p = people[i], html;
+    if (p.st === "courier") {
+      html = '<div class="card"><p class="label-caps">Sent by courier</p><p><strong>' + esc(p.first + " " + p.last) + "</strong> · course " + p.g +
+        "</p><p>Sent on " + fmt(p.date) + " · tracking number <strong>" + p.track + "</strong></p><p class=\"muted\">No signature photo: the courier receipt is the proof.</p></div>";
+    } else {
+      var note = p.st === "sheet"
+        ? "<p>Signed on the <strong>original paper sheet</strong>. Linked to the scan of page " + p.page + ".</p>"
+        : p.st === "void" ? '<p class="before">This record was voided. The photo is kept, never deleted.</p>'
+        : "<p>Handed over by: <strong>" + esc(p.by) + "</strong></p>";
+      html = '<div class="card"><div class="panel-inner">' + slipSvg(p) + '<div class="panel-text"><p class="label-caps">Signature photo</p><p><strong>' +
+        esc(p.first + " " + p.last) + "</strong> · course " + p.g + " · no. " + p.n + "</p><p>" + fmt(p.date) + "</p>" + note +
+        '<p class="muted">Saved in Drive as</p><p class="file">Signatures/20' + p.g.slice(0, 2) + "/" + p.g + "/" + esc(fileName(p)) + '</p><p class="muted">~240 KB</p>' +
+        '<button class="btn" data-close>Close</button></div></div></div>';
+    }
+    panel.innerHTML = html; panel.classList.add("open");
+  }
+
+  function register(i) {
+    var p = people[i], kb = 3000 + Math.floor(rng(p.last)() * 2000), small = 210 + Math.floor(rng(p.first)() * 60);
+    var today = new Date(), iso = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
+    var preview = Object.assign({}, p, { date: iso });
+    var steps = [
+      "Slip signed on paper",
+      "Photo taken with the phone (" + (kb / 1000).toFixed(1) + " MB)",
+      "Compressed in the browser to " + small + " KB",
+      "Saved to Drive as “" + fileName(preview) + "”",
+      "Register updated with a “View signature” link"
+    ];
+    panel.innerHTML = '<div class="card"><p class="label-caps">Registering ' + esc(p.first + " " + p.last) + '</p><ol class="stepper">' +
+      steps.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ol></div>";
+    panel.classList.add("open");
+    var lis = panel.querySelectorAll(".stepper li"), k = 0;
+    (function next() {
+      if (k < lis.length) { lis[k++].classList.add("done"); timer = setTimeout(next, 550); return; }
+      Object.assign(p, { st: "slip", date: iso, by: "Front desk" });
+      render();
+      timer = setTimeout(function () { view(i); }, 500);
+    })();
+  }
+
+  rowsEl.addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return;
+    if (b.dataset.view) view(+b.dataset.view);
+    if (b.dataset.reg) register(+b.dataset.reg);
+  });
+  panel.addEventListener("click", function (e) { if (e.target.closest("[data-close]")) { panel.classList.remove("open"); } });
+  q.addEventListener("input", function () { render(); });
+  document.getElementById("reset").addEventListener("click", function () {
+    clearTimeout(timer);
+    people = JSON.parse(initial);
+    q.value = ""; panel.innerHTML = ""; panel.classList.remove("open");
+    render(); q.focus();
+  });
+  render();
+})();
+</script>
+</body>
+</html>
