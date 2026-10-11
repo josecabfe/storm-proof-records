@@ -316,48 +316,100 @@
     .bar-row.wide { grid-template-columns: 96px 1fr; }
     .chart .cap.wide { margin-left: 112px; }
   }
+
+  /* ---------- Language switch (EN / ES) ---------- */
+  html[lang="es"] .i-en, html:not([lang="es"]) .i-es { display: none !important; }
+  .lang-switch {
+    position: fixed; top: 14px; right: 16px; z-index: 10;
+    display: flex; align-items: center; gap: 2px; padding: 4px 6px;
+    background: rgba(255, 255, 255, 0.82); backdrop-filter: saturate(180%) blur(12px); -webkit-backdrop-filter: saturate(180%) blur(12px);
+    border-radius: 980px; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.08);
+    font-size: 13px; color: var(--faint);
+  }
+  .lang-switch button {
+    font: inherit; font-weight: 600; letter-spacing: 0.02em; color: var(--muted); background: none; border: 0;
+    padding: 4px 8px; border-radius: 980px; cursor: pointer;
+  }
+  .lang-switch button[aria-pressed="true"] { color: var(--blue-deep); }
+  .lang-switch button:hover { background: var(--blue-wash); }
+  @media print { .lang-switch { display: none; } }
 </style>
 </head>
 <body>
+<div class="lang-switch" role="group" aria-label="Language">
+  <button type="button" data-setlang="en">EN</button><span aria-hidden="true">|</span><button type="button" data-setlang="es">ES</button>
+</div>
 <main>
 
   <section class="band center">
     <div class="inner">
-      <p class="eyebrow">Case study · Process &amp; Systems · Real project, client data protected</p>
-      <h1><span class="l1">How I rescued storm&#8209;damaged records</span><span class="l2">and made them searchable in seconds.</span></h1>
-      <p class="lede">A training and consulting firm kept proof of every certificate handover on paper, until the strongest hailstorm in years broke parts of the office roof and rainwater soaked the sheets. I built a zero-cost web app that <strong>keeps the team’s paper routine but stores every signature in the cloud</strong>, and moved the archive into it.</p>
-      <p class="byline">José Cabral Ferraro · Process &amp; Systems Specialist · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a></p>
-      <div class="stats">
+      <p class="eyebrow"><span class="i-en">Case study · Process &amp; Systems · Real project, client data protected</span><span class="i-es">Caso de estudio · Procesos y Sistemas · Proyecto real, datos de clientes protegidos</span></p>
+      <h1 class="i-en"><span class="l1">How I rescued storm&#8209;damaged records</span><span class="l2">and made them searchable in seconds.</span></h1>
+      <h1 class="i-es"><span class="l1">Cómo rescaté registros dañados por una tormenta</span><span class="l2">y los hice consultables en segundos.</span></h1>
+      <p class="lede i-en">A training and consulting firm kept proof of every certificate handover on paper, until the strongest hailstorm in years broke parts of the office roof and rainwater soaked the sheets. I built a zero-cost web app that <strong>keeps the team’s paper routine but stores every signature in the cloud</strong>, and moved the archive into it.</p>
+      <p class="lede i-es">Una consultora y centro de capacitación guardaba en papel la prueba de cada entrega de certificado, hasta que la granizada más fuerte en años rompió parte del techo de la oficina y el agua mojó las planillas. Desarrollé una web app sin costo que <strong>mantiene la rutina en papel del equipo pero guarda cada firma en la nube</strong>, y pasé el archivo histórico a ella.</p>
+      <p class="byline">José Cabral Ferraro · <span class="i-en">Process &amp; Systems Specialist</span><span class="i-es">Especialista en Procesos y Sistemas</span> · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a></p>
+      <div class="stats i-en">
         <div class="stat"><p class="n">~1,550</p><p class="l">handwritten records digitized, <strong>2024–2026</strong></p></div>
         <div class="stat"><p class="n">~1,100</p><p class="l">certificate handovers linked to their signed proof</p></div>
-        <div class="stat"><p class="n">Seconds</p><p class="l">to find a record, <strong>down&nbsp;from&nbsp;~3&nbsp;min</strong></p></div>
+        <div class="stat"><p class="n">Seconds</p><p class="l">to find a record, <strong style="white-space:nowrap">down from ~3 min</strong></p></div>
         <div class="stat"><p class="n">0</p><p class="l">records lost, at <strong>$0</strong> extra software cost</p></div>
+      </div>
+      <div class="stats i-es">
+        <div class="stat"><p class="n">~1.550</p><p class="l">registros escritos a mano digitalizados, <strong>2024–2026</strong></p></div>
+        <div class="stat"><p class="n">~1.100</p><p class="l">entregas de certificados vinculadas a su comprobante firmado</p></div>
+        <div class="stat"><p class="n">Segundos</p><p class="l">para encontrar un registro, <strong style="white-space:nowrap">antes ~3 min</strong></p></div>
+        <div class="stat"><p class="n">0</p><p class="l">registros perdidos, con <strong>$0</strong> de software extra</p></div>
       </div>
     </div>
   </section>
 
   <section class="band alt">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>The problem.</h2>
         <p class="sub"><span class="q">“What happens if the only proof of delivery gets wet?”</span>The paper was the only proof that someone had received their certificate, <strong>and that proof was at risk.</strong></p>
       </div>
+      <div class="center i-es">
+        <h2>El problema.</h2>
+        <p class="sub"><span class="q">“¿Qué pasa si la única prueba de entrega se moja?”</span>El papel era la única prueba de que alguien había recibido su certificado, <strong>y esa prueba estaba en riesgo.</strong></p>
+      </div>
       <div class="grid2">
         <div class="tile">
+          <div class="i-en">
           <h3>What was going wrong</h3>
           <ul class="list">
             <li>During an El Niño season, the strongest hailstorm in years (hail the size of tennis balls) broke parts of the office roof. Water leaked in and soaked the sheets kept closest at hand.</li>
             <li>Checking if someone had picked up a certificate meant flipping through sheets by hand: <strong>about 3 minutes</strong> for the current year, twice as long or more if the sheet was archived.</li>
             <li>Records were messy: signatures spanning two rows, wrong years, notes in the margins, small signed slips taped to the back.</li>
           </ul>
+          </div>
+          <div class="i-es">
+          <h3>Qué fallaba</h3>
+          <ul class="list">
+            <li>En una temporada de El Niño, la granizada más fuerte en años (granizo del tamaño de pelotas de tenis) rompió parte del techo de la oficina. Entró agua y mojó las planillas que estaban más a mano.</li>
+            <li>Para saber si alguien había retirado su certificado había que hojear planillas a mano: <strong>unos 3 minutos</strong> para el año en curso, el doble o más si la planilla ya estaba archivada.</li>
+            <li>Los registros eran desprolijos: firmas que ocupaban dos filas, años equivocados, notas en los márgenes, hojitas firmadas pegadas al dorso.</li>
+          </ul>
+          </div>
         </div>
         <div class="tile">
+          <div class="i-en">
           <h3>What the owners asked for</h3>
           <ul class="list">
             <li><strong>Don’t change how we work.</strong> People keep signing on paper, no on-screen signatures yet.</li>
             <li><strong>Make it a standalone system</strong>, independent from all the company’s existing software: from paper in a cabinet to fully digital records.</li>
             <li><strong>No new software costs.</strong></li>
           </ul>
+          </div>
+          <div class="i-es">
+          <h3>Qué pidieron los dueños</h3>
+          <ul class="list">
+            <li><strong>No cambiar cómo trabajamos.</strong> La gente sigue firmando en papel, todavía sin firmas en pantalla.</li>
+            <li><strong>Que sea un sistema independiente</strong> de todo el software de la empresa: de papeles en un armario a registros totalmente digitales.</li>
+            <li><strong>Sin costos de software nuevos.</strong></li>
+          </ul>
+          </div>
         </div>
       </div>
     </div>
@@ -365,11 +417,15 @@
 
   <section class="band">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>How it works <span class="accent">now.</span></h2>
         <p class="sub"><span class="q">“Can we keep signing on paper and never lose a signature?”</span>Signing still happens on paper. <strong>The only new step is taking a photo with a phone.</strong></p>
       </div>
-      <ol class="steps6">
+      <div class="center i-es">
+        <h2>Cómo funciona <span class="accent">ahora.</span></h2>
+        <p class="sub"><span class="q">“¿Podemos seguir firmando en papel y nunca perder una firma?”</span>Se sigue firmando en papel. <strong>El único paso nuevo es sacar una foto con el celular.</strong></p>
+      </div>
+      <ol class="steps6 i-en">
         <li><strong>Sign a paper slip</strong><p>A redesigned slip with boxes for the course code and person number, so every photo identifies itself.</p></li>
         <li><strong>Take a photo</strong><p>With any phone, from the web app. Works on phone and PC, no Google account needed.</p></li>
         <li><strong>Photo is shrunk</strong><p>Compressed in the browser from 3–5 MB to about 250 KB, over 90% smaller.</p></li>
@@ -377,29 +433,42 @@
         <li><strong>Register updated</strong><p>The spreadsheet, with the same layout as the paper sheet, gets a “View signature” link.</p></li>
         <li><strong>Search in seconds</strong><p>Type a name or ID number and see every course and year, with the signature photo.</p></li>
       </ol>
-      <p class="note">It also covers the other ways a certificate leaves the office: picked up by someone else, sent by courier with a tracking number, or signed on an old sheet. <strong>Records are never deleted</strong>: a wrong entry is marked “void” and its photo is kept.</p>
+      <ol class="steps6 i-es">
+        <li><strong>Se firma una hojita</strong><p>Una hojita rediseñada con casilleros para el código del curso y el número de la persona, así cada foto se identifica sola.</p></li>
+        <li><strong>Se saca una foto</strong><p>Con cualquier celular, desde la web app. Funciona en celular y PC, sin cuenta de Google.</p></li>
+        <li><strong>La foto se achica</strong><p>Se comprime en el navegador de 3–5 MB a unos 250 KB, más de 90% más liviana.</p></li>
+        <li><strong>Se guarda con nombre</strong><p>En Drive, por año y curso, con el nombre <code>código - n° - nombre - fecha</code>.</p></li>
+        <li><strong>Se actualiza el registro</strong><p>La planilla, con la misma estructura que la hoja en papel, recibe un link “Ver firma”.</p></li>
+        <li><strong>Se busca en segundos</strong><p>Se escribe un nombre o cédula y aparecen todos los cursos y años, con la foto de la firma.</p></li>
+      </ol>
+      <p class="note i-en">It also covers the other ways a certificate leaves the office: picked up by someone else, sent by courier with a tracking number, or signed on an old sheet. <strong>Records are never deleted</strong>: a wrong entry is marked “void” and its photo is kept.</p>
+      <p class="note i-es">También cubre las otras formas en que un certificado sale de la oficina: lo retira otra persona, se envía por courier con número de seguimiento, o se firma en una planilla vieja. <strong>Los registros nunca se borran</strong>: un error se marca como “anulado” y su foto se conserva.</p>
     </div>
   </section>
 
   <section class="band alt">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>Try it <span class="accent">yourself.</span></h2>
         <p class="sub"><span class="q">“Who still hasn’t picked up their certificate?”</span>A small copy of the search screen, with made-up people. Search a name or ID, open a signature, or <strong>register a pending handover.</strong></p>
+      </div>
+      <div class="center i-es">
+        <h2>Probalo <span class="accent">vos mismo.</span></h2>
+        <p class="sub"><span class="q">“¿Quién todavía no retiró su certificado?”</span>Una copia chica de la pantalla de búsqueda, con personas inventadas. Buscá un nombre o cédula, abrí una firma o <strong>registrá una entrega pendiente.</strong></p>
       </div>
       <div class="tile demo">
         <div class="demo-bar">
           <label class="search">
-            <input id="q" type="search" placeholder="Search by name or ID, e.g. “Ana” or 4218" aria-label="Search by name or ID number" autocomplete="off">
+            <input id="q" type="search" autocomplete="off">
           </label>
           <span style="display:inline-flex;gap:12px;align-items:center;flex-wrap:wrap">
-            <span class="demo-tag">Fictional data generated with AI</span>
-            <button class="btn" id="reset" type="button">Reset demo</button>
+            <span class="demo-tag"><span class="i-en">Fictional data generated with AI</span><span class="i-es">Datos ficticios generados con IA</span></span>
+            <button class="btn" id="reset" type="button"><span class="i-en">Reset demo</span><span class="i-es">Reiniciar demo</span></button>
           </span>
         </div>
         <div class="table-wrap">
           <table>
-            <thead><tr><th>Course</th><th>No.</th><th>Name</th><th class="col-id">ID</th><th>Status</th><th class="col-date">Date</th><th></th></tr></thead>
+            <thead><tr><th><span class="i-en">Course</span><span class="i-es">Curso</span></th><th><span class="i-en">No.</span><span class="i-es">N°</span></th><th><span class="i-en">Name</span><span class="i-es">Nombre</span></th><th class="col-id"><span class="i-en">ID</span><span class="i-es">CI</span></th><th><span class="i-en">Status</span><span class="i-es">Estado</span></th><th class="col-date"><span class="i-en">Date</span><span class="i-es">Fecha</span></th><th></th></tr></thead>
             <tbody id="rows"></tbody>
           </table>
         </div>
@@ -411,28 +480,39 @@
 
   <section class="band">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>Moving the archive. <span class="accent">Back to 2018.</span></h2>
         <p class="sub"><span class="q">“What about the sheets already stored in boxes?”</span>The largest part of the project. 2024–2026 is done: <strong>~100 scanned pages, 37 courses and ~1,550 records.</strong> The same process is now running on every year back to 2018.</p>
       </div>
-      <ol class="steps4">
+      <div class="center i-es">
+        <h2>Pasar el archivo. <span class="accent">Hasta 2018.</span></h2>
+        <p class="sub"><span class="q">“¿Y las planillas que ya están guardadas en cajas?”</span>La parte más grande del proyecto. 2024–2026 está listo: <strong>~100 páginas escaneadas, 37 cursos y ~1.550 registros.</strong> El mismo proceso ya está corriendo sobre cada año hasta 2018.</p>
+      </div>
+      <ol class="steps4 i-en">
         <li><strong>Scan</strong><p>Front (the list) and back (taped slips) of every sheet, year by year.</p></li>
         <li><strong>Transcribe</strong><p>Names, ID numbers, dates and how each certificate was handed over.</p></li>
         <li><strong>Validate</strong><p>Automatic checks on numbering, ID format and dates, plus a list of doubtful cases.</p></li>
         <li><strong>Import</strong><p>Each course created with its records, linked to the right page photo.</p></li>
       </ol>
+      <ol class="steps4 i-es">
+        <li><strong>Escanear</strong><p>Frente (la lista) y dorso (hojitas pegadas) de cada planilla, año por año.</p></li>
+        <li><strong>Transcribir</strong><p>Nombres, cédulas, fechas y cómo se entregó cada certificado.</p></li>
+        <li><strong>Validar</strong><p>Controles automáticos de numeración, formato de cédula y fechas, más una lista de casos dudosos.</p></li>
+        <li><strong>Importar</strong><p>Cada curso creado con sus registros, vinculado a la foto de la página correcta.</p></li>
+      </ol>
       <div class="tile">
         <div class="demo-bar">
-          <p class="label-caps" style="margin:0">From a messy sheet to clean records</p>
-          <span class="demo-tag">Recreated example · fictional names</span>
+          <p class="label-caps" style="margin:0"><span class="i-en">From a messy sheet to clean records</span><span class="i-es">De una planilla desprolija a registros limpios</span></p>
+          <span class="demo-tag"><span class="i-en">Recreated example · fictional names</span><span class="i-es">Ejemplo recreado · nombres ficticios</span></span>
         </div>
-        <p style="margin:0 0 18px;color:var(--muted);font-size:16px">Real sheets looked like this. Rules agreed with the team were applied the same way everywhere, and <strong>about 80 doubtful cases</strong> were checked one by one with the business owner.</p>
+        <p class="i-en" style="margin:0 0 18px;color:var(--muted);font-size:16px">Real sheets looked like this. Rules agreed with the team were applied the same way everywhere, and <strong>about 80 doubtful cases</strong> were checked one by one with the business owner.</p>
+        <p class="i-es" style="margin:0 0 18px;color:var(--muted);font-size:16px">Las planillas reales se veían así. Las reglas acordadas con el equipo se aplicaron igual en todas, y <strong>unos 80 casos dudosos</strong> se revisaron uno por uno con la dirección.</p>
         <div class="ba">
           <div class="paper-wrap">
             <div class="paper" id="paper">
-              <p class="paper-title">Certificate handover · Course 25-07</p>
+              <p class="paper-title"><span class="i-en">Certificate handover · Course 25-07</span><span class="i-es">Entrega de certificados · Curso 25-07</span></p>
               <table>
-                <thead><tr><th>No.</th><th>Full name</th><th>ID</th><th>Date</th><th>Signature</th></tr></thead>
+                <thead><tr><th><span class="i-en">No.</span><span class="i-es">N°</span></th><th><span class="i-en">Full name</span><span class="i-es">Nombre y apellido</span></th><th><span class="i-en">ID</span><span class="i-es">CI</span></th><th><span class="i-en">Date</span><span class="i-es">Fecha</span></th><th><span class="i-en">Signature</span><span class="i-es">Firma</span></th></tr></thead>
                 <tbody>
                   <tr><td>1</td><td>L. Benítez</td><td>3.456.781</td><td><span class="hand circled">12/03/24</span></td><td class="sigcell" data-sig="Lucía Benítez"></td></tr>
                   <tr><td>2</td><td>M. Ríos</td><td>4.902.335</td><td><span class="hand">12/03/25</span></td><td class="sigcell" data-sig="Martín Ríos" data-tall="1"></td></tr>
@@ -444,7 +524,7 @@
             </div>
           </div>
           <div class="table-wrap">
-            <table class="clean">
+            <table class="clean i-en">
               <thead><tr><th>Person</th><th>In the system</th><th>Why</th></tr></thead>
               <tbody>
                 <tr><td><span class="num-badge">1</span>Lucía Benítez</td><td>Picked up · 12/03/2025</td><td class="rule">Wrong year: the course ran in 2025. Checked against the paper.</td></tr>
@@ -454,7 +534,17 @@
                 <tr><td><span class="num-badge">5</span>Pablo Ortiz</td><td>Picked up · 12/03/2025</td><td class="rule">Signature but no date = the course’s most common date.</td></tr>
               </tbody>
             </table>
-            <p class="hint">Ticks and dashes in the margins were ignored.</p>
+            <table class="clean i-es">
+              <thead><tr><th>Persona</th><th>En el sistema</th><th>Por qué</th></tr></thead>
+              <tbody>
+                <tr><td><span class="num-badge">1</span>Lucía Benítez</td><td>Retiró · 12/03/2025</td><td class="rule">Año equivocado: el curso fue en 2025. Verificado con el papel.</td></tr>
+                <tr><td><span class="num-badge">2</span>Martín Ríos</td><td>Retiró · 12/03/2025</td><td class="rule">La firma invade la fila 3, pero es de la fila 2.</td></tr>
+                <tr><td><span class="num-badge">3</span>Diego Acosta</td><td><span class="before">No retiró</span></td><td class="rule">Fecha sin firma = no retiró.</td></tr>
+                <tr><td><span class="num-badge">4</span>Carla Giménez</td><td>Retiró · 19/03/2025</td><td class="rule">Dos fechas = la más reciente.</td></tr>
+                <tr><td><span class="num-badge">5</span>Pablo Ortiz</td><td>Retiró · 12/03/2025</td><td class="rule">Firma sin fecha = la fecha más común del curso.</td></tr>
+              </tbody>
+            </table>
+            <p class="hint"><span class="i-en">Ticks and dashes in the margins were ignored.</span><span class="i-es">Las tildes y rayas en los márgenes se ignoraron.</span></p>
           </div>
         </div>
       </div>
@@ -463,18 +553,28 @@
 
   <section class="band alt">
     <div class="inner">
-      <div class="center">
+      <div class="center i-en">
         <h2>Before and <span class="accent">after.</span></h2>
         <p class="sub">Time to answer “did this person get their certificate?”</p>
       </div>
-      <div class="chart" role="img" aria-label="Time to find a record: 6 or more minutes for an archived sheet, about 3 minutes for the current year, seconds now">
+      <div class="center i-es">
+        <h2>Antes y <span class="accent">después.</span></h2>
+        <p class="sub">Tiempo para responder “¿esta persona retiró su certificado?”</p>
+      </div>
+      <div class="chart i-en" role="img" aria-label="Time to find a record: 6 or more minutes for an archived sheet, about 3 minutes for the current year, seconds now">
         <div class="bar-row wide"><span class="who">Archived sheet</span><div class="bar b">6+ min</div></div>
         <div class="bar-row wide"><span class="who">Current year</span><div class="bar m">~3 min</div></div>
         <div class="bar-row wide"><span class="who">Now</span><div class="bar a">Seconds</div></div>
         <p class="cap wide">Measured by the team before and after the change.</p>
       </div>
+      <div class="chart i-es" role="img" aria-label="Tiempo para encontrar un registro: 6 minutos o más con una planilla archivada, unos 3 minutos para el año en curso, segundos ahora">
+        <div class="bar-row wide"><span class="who">Planilla archivada</span><div class="bar b">6+ min</div></div>
+        <div class="bar-row wide"><span class="who">Año en curso</span><div class="bar m">~3 min</div></div>
+        <div class="bar-row wide"><span class="who">Ahora</span><div class="bar a">Segundos</div></div>
+        <p class="cap wide">Medido por el equipo antes y después del cambio.</p>
+      </div>
       <div class="table-wrap">
-        <table class="facts">
+        <table class="facts i-en">
           <thead><tr><th></th><th>Before</th><th>After</th></tr></thead>
           <tbody>
             <tr><td>Proof of delivery</td><td class="before">One paper copy, already damaged</td><td class="after">Photo backed up in the cloud</td></tr>
@@ -483,12 +583,22 @@
             <tr><td>Cost</td><td class="before">—</td><td class="after">$0 in software</td></tr>
           </tbody>
         </table>
+        <table class="facts i-es">
+          <thead><tr><th></th><th>Antes</th><th>Después</th></tr></thead>
+          <tbody>
+            <tr><td>Prueba de entrega</td><td class="before">Una sola copia en papel, ya dañada</td><td class="after">Foto respaldada en la nube</td></tr>
+            <tr><td>Rutina del equipo</td><td class="before">Firmar en papel</td><td class="after">Firmar en papel + una foto</td></tr>
+            <tr><td>Años anteriores</td><td class="before">Solo en cajas</td><td class="after">Cargándose hasta 2018</td></tr>
+            <tr><td>Costo</td><td class="before">—</td><td class="after">$0 en software</td></tr>
+          </tbody>
+        </table>
       </div>
     </div>
   </section>
 
   <section class="band center">
     <div class="inner">
+      <div class="i-en">
       <h2>What I <span class="accent">did.</span></h2>
       <p class="sub">End to end: from talking with the team to handing over a working tool and a short guide.</p>
       <ul class="skills">
@@ -513,13 +623,41 @@
           <li>After the migration, all temporary files with personal data were deleted.</li>
         </ul>
       </details>
+      </div>
+      <div class="i-es">
+      <h2>Qué <span class="accent">hice.</span></h2>
+      <p class="sub">De punta a punta: desde hablar con el equipo hasta entregar una herramienta funcionando y una guía corta.</p>
+      <ul class="skills">
+        <li>Mapeo de procesos con usuarios</li>
+        <li>Diseño de soluciones dentro de las restricciones del negocio</li>
+        <li>Migración y limpieza de datos</li>
+        <li>Validación y control de calidad</li>
+        <li>Google Apps Script / JavaScript</li>
+        <li>Google Sheets y Drive</li>
+        <li>Guía de usuario y capacitación del equipo</li>
+        <li>Privacidad de datos personales</li>
+      </ul>
+      <details style="text-align:left">
+        <summary>Detalles técnicos</summary>
+        <ul>
+          <li>Backend en Google Apps Script (JavaScript V8), con un candado para que dos personas no guarden a la vez.</li>
+          <li>Frontend en HTML/CSS/JavaScript puro, sin librerías.</li>
+          <li>Una planilla por año, una pestaña por curso. El código del curso (ej. <code>26-05</code>) define el año, la pestaña y la carpeta de fotos.</li>
+          <li>Acceso con contraseña, bloqueo tras intentos fallidos y sesiones de 6 horas.</li>
+          <li>Primero se armó y probó un prototipo con datos ficticios, y después se pasó a la cuenta de la empresa. Desarrollado en local con clasp y git.</li>
+          <li>La app es 100% de la empresa y sigue funcionando sin mí.</li>
+          <li>Después de la migración se borraron todos los archivos temporales con datos personales.</li>
+        </ul>
+      </details>
+      </div>
     </div>
   </section>
 
   <footer>
     <div class="inner">
-      <p>This is a real project at my current job. Our clients trust us with their personal information, so no real names, ID numbers or screenshots of the real system are shown here. The demo data and the recreated sheet are fictional and were generated with AI. Numbers are rounded.</p>
-      <p>Another project for the same team: <a href="https://josecabfe.github.io/payments-invoicing-case-study/">How I optimized a payment process from 5 minutes to under 1 ›</a></p>
+      <p class="i-en">This is a real project at my current job. Our clients trust us with their personal information, so no real names, ID numbers or screenshots of the real system are shown here. The demo data and the recreated sheet are fictional and were generated with AI. Numbers are rounded.</p>
+      <p class="i-es">Este es un proyecto real de mi trabajo actual. Nuestros clientes nos confían sus datos personales, por eso acá no se muestran nombres, cédulas ni capturas del sistema real. Los datos del demo y la planilla recreada son ficticios y fueron generados con IA. Las cifras están redondeadas.</p>
+      <p><span class="i-en">Another project for the same team:</span><span class="i-es">Otro proyecto para el mismo equipo:</span> <a href="https://josecabfe.github.io/payments-invoicing-case-study/" data-keeplang><span class="i-en">How I optimized a payment process from 5 minutes to under 1 ›</span><span class="i-es">Cómo optimicé un proceso de pagos de 5 minutos a menos de 1 ›</span></a></p>
       <p>José Cabral Ferraro · <a href="https://www.linkedin.com/in/jose-cabral-ferraro/">LinkedIn</a> · <a href="https://github.com/josecabfe">GitHub</a></p>
     </div>
   </footer>
@@ -527,6 +665,27 @@
 </main>
 <script>
 (function () {
+  var TITLE = ["Storm-Proof Records", "Registros a prueba de tormentas"];
+  // ---------- Language (EN / ES) ----------
+  var LANG = (function () {
+    var q = new URLSearchParams(location.search).get("lang");
+    if (q === "es" || q === "en") return q;
+    try { var s = localStorage.getItem("lang"); if (s === "es" || s === "en") return s; } catch (e) {}
+    return (navigator.language || "").toLowerCase().indexOf("es") === 0 ? "es" : "en";
+  })();
+  var onLang = [];
+  function T(en, es) { return LANG === "es" ? es : en; }
+  function setLang(l) {
+    LANG = l;
+    document.documentElement.lang = l;
+    document.title = T(TITLE[0], TITLE[1]);
+    try { localStorage.setItem("lang", l); } catch (e) {}
+    try { var u = new URL(location.href); u.searchParams.set("lang", l); history.replaceState(null, "", u); } catch (e) {}
+    document.querySelectorAll("[data-setlang]").forEach(function (b) { b.setAttribute("aria-pressed", b.dataset.setlang === l ? "true" : "false"); });
+    document.querySelectorAll("a[data-keeplang]").forEach(function (a) { var u = new URL(a.href); u.searchParams.set("lang", l); a.href = u.toString(); });
+    onLang.forEach(function (f) { f(); });
+  }
+  document.querySelectorAll("[data-setlang]").forEach(function (b) { b.addEventListener("click", function () { setLang(b.dataset.setlang); }); });
   // ---------- Fake signatures (deterministic squiggle per name) ----------
   function rng(seed) {
     var h = 2166136261;
@@ -601,19 +760,28 @@
 
   // ---------- Demo data (fictional) ----------
   var people = [
-    { g: "26-03", n: 1, first: "Ana", last: "Torres", id: "4.218.390", st: "slip", date: "2026-04-14", by: "Front desk" },
+    { g: "26-03", n: 1, first: "Ana", last: "Torres", id: "4.218.390", st: "slip", date: "2026-04-14", by: "desk" },
     { g: "26-03", n: 2, first: "Bruno", last: "Medina", id: "5.067.112", st: "courier", date: "2026-04-16", track: "70-4418" },
     { g: "26-03", n: 3, first: "Camila", last: "Rojas", id: "3.991.457", st: "pending" },
-    { g: "26-03", n: 4, first: "Daniel", last: "Vera", id: "4.730.268", st: "slip", date: "2026-04-14", by: "Front desk" },
-    { g: "26-03", n: 5, first: "Elena", last: "Duarte", id: "5.302.845", st: "slip", date: "2026-04-21", by: "A colleague, on her behalf" },
+    { g: "26-03", n: 4, first: "Daniel", last: "Vera", id: "4.730.268", st: "slip", date: "2026-04-14", by: "desk" },
+    { g: "26-03", n: 5, first: "Elena", last: "Duarte", id: "5.302.845", st: "slip", date: "2026-04-21", by: "colleague" },
     { g: "26-03", n: 6, first: "Federico", last: "Sosa", id: "4.115.903", st: "pending" },
     { g: "25-11", n: 1, first: "Gabriela", last: "Núñez", id: "3.874.226", st: "sheet", date: "2025-11-28", page: 1 },
     { g: "25-11", n: 2, first: "Hugo", last: "Ferreira", id: "4.659.071", st: "sheet", date: "2025-11-28", page: 1 },
     { g: "25-11", n: 3, first: "Ana Lucía", last: "Benítez", id: "5.240.618", st: "pending" },
     { g: "25-11", n: 4, first: "Iván", last: "Cáceres", id: "4.583.907", st: "void", date: "2025-11-28" }
   ];
-  var initial = JSON.stringify(people), timer;
-  var LABEL = { slip: "Picked up · slip signed", courier: "Sent by courier", sheet: "Signed on original sheet", pending: "Not picked up yet", void: "Void (entered by mistake)" };
+  var initial = JSON.stringify(people), timer, openView = -1, busy = false;
+  function LABEL(st) {
+    return {
+      slip: T("Picked up · slip signed", "Retiró · hojita firmada"),
+      courier: T("Sent by courier", "Enviado por courier"),
+      sheet: T("Signed on original sheet", "Firmó en la planilla original"),
+      pending: T("Not picked up yet", "Todavía no retiró"),
+      "void": T("Void (entered by mistake)", "Anulado (cargado por error)")
+    }[st];
+  }
+  function BY(k) { return { desk: T("Front desk", "Recepción"), colleague: T("A colleague, on her behalf", "Una colega, en su nombre") }[k] || k; }
 
   var rowsEl = document.getElementById("rows"), panel = document.getElementById("panel"),
       q = document.getElementById("q"), countEl = document.getElementById("count");
@@ -634,50 +802,54 @@
     });
     rowsEl.innerHTML = list.map(function (p) {
       var i = people.indexOf(p), cls = p.st === "pending" ? "st-pending" : p.st === "void" ? "" : "st-done", action;
-      if (p.st === "pending") action = '<button class="btn primary" data-reg="' + i + '">Register</button>';
-      else if (p.st === "courier") action = '<button class="btn" data-view="' + i + '">Details</button>';
-      else action = '<button class="btn" data-view="' + i + '">View signature</button>';
+      if (p.st === "pending") action = '<button class="btn primary" data-reg="' + i + '">' + T("Register", "Registrar") + "</button>";
+      else if (p.st === "courier") action = '<button class="btn" data-view="' + i + '">' + T("Details", "Detalles") + "</button>";
+      else action = '<button class="btn" data-view="' + i + '">' + T("View signature", "Ver firma") + "</button>";
       return '<tr class="' + (p.st === "void" ? "void" : "") + '"><td>' + p.g + "</td><td>" + p.n + '</td><td class="name">' + esc(p.first + " " + p.last) +
-        '</td><td class="col-id">' + p.id + '</td><td><span class="status ' + cls + '"><span class="dot"></span>' + LABEL[p.st] +
+        '</td><td class="col-id">' + p.id + '</td><td><span class="status ' + cls + '"><span class="dot"></span>' + LABEL(p.st) +
         '</span></td><td class="col-date">' + fmt(p.date) + "</td><td>" + action + "</td></tr>";
-    }).join("") || '<tr><td colspan="7" class="muted" style="text-align:center;padding:24px">No one found. Try “Ana”, “Rojas” or 4730.</td></tr>';
-    var groups = {}; list.forEach(function (p) { groups[p.g] = 1; });
-    countEl.textContent = list.length + (list.length === 1 ? " person" : " people") + " found across " + Object.keys(groups).length + " course" + (Object.keys(groups).length === 1 ? "" : "s") + " · real system: ~1,550 records from 2024–2026, and growing";
+    }).join("") || '<tr><td colspan="7" class="muted" style="text-align:center;padding:24px">' + T("No one found. Try “Ana”, “Rojas” or 4730.", "No se encontró a nadie. Probá “Ana”, “Rojas” o 4730.") + "</td></tr>";
+    var groups = Object.keys(list.reduce(function (o, p) { o[p.g] = 1; return o; }, {})).length;
+    countEl.textContent = LANG === "es"
+      ? list.length + (list.length === 1 ? " persona encontrada" : " personas encontradas") + " en " + groups + (groups === 1 ? " curso" : " cursos") + " · sistema real: ~1.550 registros de 2024–2026, y creciendo"
+      : list.length + (list.length === 1 ? " person" : " people") + " found across " + groups + " course" + (groups === 1 ? "" : "s") + " · real system: ~1,550 records from 2024–2026, and growing";
   }
 
   function slipSvg(p) {
     var name = p.first + " " + p.last;
-    return '<svg class="slip" viewBox="0 0 320 180" role="img" aria-label="Photo of a signed handover slip (fictional)">' +
+    return '<svg class="slip" viewBox="0 0 320 180" role="img" aria-label="' + T("Photo of a signed handover slip (fictional)", "Foto de una hojita de entrega firmada (ficticia)") + '">' +
       '<rect width="320" height="180" fill="#fbf8ef"/>' +
-      '<text x="14" y="22" font-size="10" font-weight="700" fill="#333" font-family="system-ui,sans-serif" letter-spacing=".5">CERTIFICATE HANDOVER SLIP</text>' +
-      '<text x="190" y="22" font-size="9" fill="#555" font-family="system-ui,sans-serif">Course</text><rect x="226" y="10" width="40" height="17" fill="none" stroke="#777"/>' +
+      '<text x="14" y="22" font-size="10" font-weight="700" fill="#333" font-family="system-ui,sans-serif" letter-spacing=".5">' + T("CERTIFICATE HANDOVER SLIP", "RETIRO DE CERTIFICADO") + '</text>' +
+      '<text x="190" y="22" font-size="9" fill="#555" font-family="system-ui,sans-serif">' + T("Course", "Curso") + '</text><rect x="226" y="10" width="40" height="17" fill="none" stroke="#777"/>' +
       '<text x="230" y="23" font-size="15" fill="#1d3270" font-family="Caveat,cursive">' + p.g + '</text>' +
-      '<text x="270" y="22" font-size="9" fill="#555" font-family="system-ui,sans-serif">No.</text><rect x="287" y="10" width="24" height="17" fill="none" stroke="#777"/>' +
+      '<text x="270" y="22" font-size="9" fill="#555" font-family="system-ui,sans-serif">' + T("No.", "N°") + '</text><rect x="287" y="10" width="24" height="17" fill="none" stroke="#777"/>' +
       '<text x="291" y="23" font-size="15" fill="#1d3270" font-family="Caveat,cursive">' + String(p.n).padStart(2, "0") + '</text>' +
-      '<text x="14" y="56" font-size="9" fill="#555" font-family="system-ui,sans-serif">Name</text><line x1="48" y1="58" x2="306" y2="58" stroke="#999"/>' +
+      '<text x="14" y="56" font-size="9" fill="#555" font-family="system-ui,sans-serif">' + T("Name", "Nombre") + '</text><line x1="48" y1="58" x2="306" y2="58" stroke="#999"/>' +
       '<text x="54" y="54" font-size="19" fill="#1d3270" font-family="Caveat,cursive">' + esc(name) + '</text>' +
-      '<text x="14" y="84" font-size="9" fill="#555" font-family="system-ui,sans-serif">ID</text><line x1="48" y1="86" x2="170" y2="86" stroke="#999"/>' +
+      '<text x="14" y="84" font-size="9" fill="#555" font-family="system-ui,sans-serif">' + T("ID", "CI") + '</text><line x1="48" y1="86" x2="170" y2="86" stroke="#999"/>' +
       '<text x="54" y="82" font-size="18" fill="#1d3270" font-family="Caveat,cursive">' + p.id + '</text>' +
-      '<text x="180" y="84" font-size="9" fill="#555" font-family="system-ui,sans-serif">Date</text><line x1="206" y1="86" x2="306" y2="86" stroke="#999"/>' +
+      '<text x="180" y="84" font-size="9" fill="#555" font-family="system-ui,sans-serif">' + T("Date", "Fecha") + '</text><line x1="206" y1="86" x2="306" y2="86" stroke="#999"/>' +
       '<text x="212" y="82" font-size="18" fill="#1d3270" font-family="Caveat,cursive">' + fmt(p.date) + '</text>' +
-      '<text x="14" y="160" font-size="9" fill="#555" font-family="system-ui,sans-serif">Signature</text><line x1="64" y1="162" x2="306" y2="162" stroke="#999"/>' +
+      '<text x="14" y="160" font-size="9" fill="#555" font-family="system-ui,sans-serif">' + T("Signature", "Firma") + '</text><line x1="64" y1="162" x2="306" y2="162" stroke="#999"/>' +
       '<g transform="translate(80,104)">' + sigSvg(name, 180, 56).replace(/<\/?svg[^>]*>/g, "") + "</g></svg>";
   }
 
   function view(i) {
     var p = people[i], html;
+    openView = i;
     if (p.st === "courier") {
-      html = '<div class="card"><p class="label-caps">Sent by courier</p><p><strong>' + esc(p.first + " " + p.last) + "</strong> · course " + p.g +
-        "</p><p>Sent on " + fmt(p.date) + " · tracking number <strong>" + p.track + "</strong></p><p class=\"muted\">No signature photo: the courier receipt is the proof.</p></div>";
+      html = '<div class="card"><p class="label-caps">' + T("Sent by courier", "Enviado por courier") + "</p><p><strong>" + esc(p.first + " " + p.last) + "</strong> · " + T("course ", "curso ") + p.g +
+        "</p><p>" + T("Sent on ", "Enviado el ") + fmt(p.date) + " · " + T("tracking number ", "número de seguimiento ") + "<strong>" + p.track + "</strong></p><p class=\"muted\">" +
+        T("No signature photo: the courier receipt is the proof.", "Sin foto de firma: el comprobante del courier es la prueba.") + "</p></div>";
     } else {
       var note = p.st === "sheet"
-        ? "<p>Signed on the <strong>original paper sheet</strong>. Linked to the scan of page " + p.page + ".</p>"
-        : p.st === "void" ? '<p class="before">This record was voided. The photo is kept, never deleted.</p>'
-        : "<p>Handed over by: <strong>" + esc(p.by) + "</strong></p>";
-      html = '<div class="card"><div class="panel-inner">' + slipSvg(p) + '<div class="panel-text"><p class="label-caps">Signature photo</p><p><strong>' +
-        esc(p.first + " " + p.last) + "</strong> · course " + p.g + " · no. " + p.n + "</p><p>" + fmt(p.date) + "</p>" + note +
-        '<p class="muted">Saved in Drive as</p><p class="file">Signatures/20' + p.g.slice(0, 2) + "/" + p.g + "/" + esc(fileName(p)) + '</p><p class="muted">~240 KB</p>' +
-        '<button class="btn" data-close>Close</button></div></div></div>';
+        ? "<p>" + T("Signed on the <strong>original paper sheet</strong>. Linked to the scan of page ", "Firmó en la <strong>planilla original en papel</strong>. Vinculado al escaneo de la página ") + p.page + ".</p>"
+        : p.st === "void" ? '<p class="before">' + T("This record was voided. The photo is kept, never deleted.", "Este registro se anuló. La foto se conserva, nunca se borra.") + "</p>"
+        : "<p>" + T("Handed over by: ", "Entregado por: ") + "<strong>" + esc(BY(p.by)) + "</strong></p>";
+      html = '<div class="card"><div class="panel-inner">' + slipSvg(p) + '<div class="panel-text"><p class="label-caps">' + T("Signature photo", "Foto de la firma") + "</p><p><strong>" +
+        esc(p.first + " " + p.last) + "</strong> · " + T("course ", "curso ") + p.g + " · " + T("no. ", "n° ") + p.n + "</p><p>" + fmt(p.date) + "</p>" + note +
+        '<p class="muted">' + T("Saved in Drive as", "Guardada en Drive como") + '</p><p class="file">' + T("Signatures", "Firmas") + "/20" + p.g.slice(0, 2) + "/" + p.g + "/" + esc(fileName(p)) + '</p><p class="muted">~240 KB</p>' +
+        '<button class="btn" data-close>' + T("Close", "Cerrar") + "</button></div></div></div>";
     }
     panel.innerHTML = html; panel.classList.add("open");
   }
@@ -686,20 +858,23 @@
     var p = people[i], kb = 3000 + Math.floor(rng(p.last)() * 2000), small = 210 + Math.floor(rng(p.first)() * 60);
     var today = new Date(), iso = today.getFullYear() + "-" + String(today.getMonth() + 1).padStart(2, "0") + "-" + String(today.getDate()).padStart(2, "0");
     var preview = Object.assign({}, p, { date: iso });
+    var mb = (kb / 1000).toFixed(1);
     var steps = [
-      "Slip signed on paper",
-      "Photo taken with the phone (" + (kb / 1000).toFixed(1) + " MB)",
-      "Compressed in the browser to " + small + " KB",
-      "Saved to Drive as “" + fileName(preview) + "”",
-      "Register updated with a “View signature” link"
+      T("Slip signed on paper", "Hojita firmada en papel"),
+      T("Photo taken with the phone (" + mb + " MB)", "Foto sacada con el celular (" + mb.replace(".", ",") + " MB)"),
+      T("Compressed in the browser to " + small + " KB", "Comprimida en el navegador a " + small + " KB"),
+      T("Saved to Drive as “", "Guardada en Drive como “") + fileName(preview) + "”",
+      T("Register updated with a “View signature” link", "Registro actualizado con un link “Ver firma”")
     ];
-    panel.innerHTML = '<div class="card"><p class="label-caps">Registering ' + esc(p.first + " " + p.last) + '</p><ol class="stepper">' +
+    busy = true; openView = -1;
+    panel.innerHTML = '<div class="card"><p class="label-caps">' + T("Registering ", "Registrando a ") + esc(p.first + " " + p.last) + '</p><ol class="stepper">' +
       steps.map(function (s) { return "<li>" + esc(s) + "</li>"; }).join("") + "</ol></div>";
     panel.classList.add("open");
     var lis = panel.querySelectorAll(".stepper li"), k = 0;
     (function next() {
       if (k < lis.length) { lis[k++].classList.add("done"); timer = setTimeout(next, 550); return; }
-      Object.assign(p, { st: "slip", date: iso, by: "Front desk" });
+      Object.assign(p, { st: "slip", date: iso, by: "desk" });
+      busy = false;
       render();
       timer = setTimeout(function () { view(i); }, 500);
     })();
@@ -710,15 +885,23 @@
     if (b.dataset.view) view(+b.dataset.view);
     if (b.dataset.reg) register(+b.dataset.reg);
   });
-  panel.addEventListener("click", function (e) { if (e.target.closest("[data-close]")) { panel.classList.remove("open"); } });
+  panel.addEventListener("click", function (e) { if (e.target.closest("[data-close]")) { panel.classList.remove("open"); openView = -1; } });
   q.addEventListener("input", function () { render(); });
   document.getElementById("reset").addEventListener("click", function () {
-    clearTimeout(timer);
+    clearTimeout(timer); busy = false; openView = -1;
     people = JSON.parse(initial);
     q.value = ""; panel.innerHTML = ""; panel.classList.remove("open");
     render(); q.focus();
   });
-  render();
+
+  onLang.push(function () {
+    q.placeholder = T("Search by name or ID, e.g. “Ana” or 4218", "Buscar por nombre o cédula, ej. “Ana” o 4218");
+    q.setAttribute("aria-label", T("Search by name or ID number", "Buscar por nombre o número de cédula"));
+    render();
+    if (openView >= 0 && !busy) view(openView);
+    placeCallouts();
+  });
+  setLang(LANG);
 })();
 </script>
 </body>

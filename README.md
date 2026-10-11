@@ -2,7 +2,7 @@
 
 **Case study: a zero-cost web app that keeps a team's paper routine but stores every signature in the cloud, plus the migration of ~1,550 handwritten records (and counting).**
 
-### [▶ Read the case study and try the demo](https://josecabfe.github.io/storm-proof-records/)
+### [▶ Read the case study and try the demo](https://josecabfe.github.io/storm-proof-records/?lang=en) · [Versión en español](https://josecabfe.github.io/storm-proof-records/?lang=es)
 
 A training and consulting firm (5,100+ alumni, 190+ courses in 11 years) kept proof of every certificate handover on paper, until the strongest hailstorm in years broke parts of the office roof and rainwater soaked the sheets kept closest at hand. Finding a record used to take ~3 minutes, or 6+ if the sheet was archived. Now it takes seconds.
 
