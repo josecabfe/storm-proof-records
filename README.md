@@ -1,4 +1,4 @@
-# From storm-damaged paper to records found in seconds
+# How I rescued storm-damaged records and made them searchable in seconds
 
 **Case study: a zero-cost web app that keeps a team's paper routine but stores every signature in the cloud, plus the migration of ~1,550 handwritten records (and counting).**
 
@@ -57,6 +57,6 @@ Google Apps Script (JavaScript) · Google Sheets · Google Drive · HTML/CSS/JS 
 
 *Real project at my current job. Our clients trust us with their personal information, so no names, ID numbers or screenshots of the real system are shown. The demo data and the recreated sheet are fictional and were generated with AI. Numbers are rounded.*
 
-*Another project for the same team: [Recording a course payment went from 5 minutes to under 1](https://josecabfe.github.io/payments-invoicing-case-study/)*
+*Another project for the same team: [How I optimized a payment process from 5 minutes to under 1](https://josecabfe.github.io/payments-invoicing-case-study/)*
 
 *Built by José Cabral Ferraro · [LinkedIn](https://www.linkedin.com/in/jose-cabral-ferraro/)*
