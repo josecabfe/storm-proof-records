@@ -1,6 +1,6 @@
 # How I rescued storm-damaged records and made them searchable in seconds
 
-**Case study: a zero-cost web app that keeps a team's paper routine but stores every signature in the cloud, plus the migration of ~1,550 handwritten records (and counting).**
+**Case study: a zero-cost web app that keeps a team's paper routine but stores every signature in the cloud, plus the migration of ~2,890 handwritten records (and counting).**
 
 ### [▶ Read the case study and try the demo](https://josecabfe.github.io/storm-proof-records/?lang=en) · [Versión en español](https://josecabfe.github.io/storm-proof-records/?lang=es)
 
@@ -27,18 +27,16 @@ A training and consulting firm (5,100+ alumni, 190+ courses in 11 years) kept pr
 
 ## The data migration
 
-| | 2024 | 2025 | 2026 | Total |
-|---|---|---|---|---|
-| Courses | 15 | 14 | 8 | 37 |
-| Records (people) | ~590 | ~630 | ~350 | **~1,550** |
-| Certificate handovers | ~450 | ~500 | ~160 | **~1,100** |
-| Scanned pages | 39 | 42 | 21 | **~100** |
-| Ambiguous cases resolved | 17 | 44 | 19 | **~80** |
+| | 2021 | 2022 | 2023 | 2024 | 2025 | 2026 | Total |
+|---|---|---|---|---|---|---|---|
+| Courses | 10 | 13 | 13 | 15 | 14 | 8 | **73** |
+| Records (people) | 413 | 430 | 484 | 589 | 627 | 349 | **~2,890** |
+| Certificate handovers | 371 | 382 | 438 | ~454 | ~498 | ~163 | **~2,300** |
 
 - Handovers include signatures on the sheet, signed slips and courier deliveries with a tracking number.
-- Transcription, automatic validation (numbering, ID and date formats) and ~80 ambiguous cases resolved with the business owner, paper in hand.
+- Transcription, automatic validation (numbering, ID and date formats) and ambiguous cases (~80 in 2024–2026 alone) resolved with the business owner, paper in hand.
 - Business rules applied consistently: date without signature = not picked up; signature without date = picked up on the course's most common date; two dates = the most recent; margin marks = ignored.
-- **0 records lost.** Every year back to 2018 is now being loaded with the same process.
+- **0 records lost.** 2021–2026 is done; the remaining years back to 2018 are being loaded with the same process.
 
 ## Results
 
